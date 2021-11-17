@@ -2,3 +2,15 @@
 .settings
 .classpath
 target
+
+INPUT_ALLOW
+INPUT_LINKS
+
+forbiddenByFilter
+
+handleFilesURI
+handleMails
+
+wordpress
+
+errors/

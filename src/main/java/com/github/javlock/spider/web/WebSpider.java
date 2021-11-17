@@ -81,14 +81,12 @@ public class WebSpider extends Thread {
 				parsePage(uri, doc);
 			} catch (org.jsoup.HttpStatusException e) {
 				statusCode = e.getStatusCode();
-			} catch (java.lang.IllegalArgumentException e) {
-				exceptionHandler.uncaughtException(Thread.currentThread(), e);
 			} catch (org.jsoup.UnsupportedMimeTypeException e) {
 				getDataEngine().handleFilesURI(uri);
 
 			} catch (javax.net.ssl.SSLException | java.net.SocketTimeoutException | java.net.SocketException e) {
 				// IGNORE (NOW)
-			} catch (IOException e) {
+			} catch (java.lang.IllegalArgumentException | IOException e) {
 				exceptionHandler.uncaughtException(Thread.currentThread(), e);
 			}
 			next(uri);
@@ -162,7 +160,12 @@ public class WebSpider extends Thread {
 	private void parsePage(String where, Document doc) {
 		ArrayList<String> recoveredLinkList = parseDocForLinksAsStringsAL(doc);
 		for (String string : recoveredLinkList) {
-			appendNew(where, string);
+
+			try {
+				appendNew(where, string);
+			} catch (Exception e) {
+				exceptionHandler.uncaughtException(Thread.currentThread(), e);
+			}
 		}
 		ArrayList<String> parsedFromGui = parseDocForTextAsStringsAL(where, doc);
 		for (String string : parsedFromGui) {

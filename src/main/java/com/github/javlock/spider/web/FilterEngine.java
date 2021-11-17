@@ -1,25 +1,17 @@
 package com.github.javlock.spider.web;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.github.javlock.spider.web.uritls.UrlUtils;
 
 import lombok.Getter;
 
 public class FilterEngine {
 	private @Getter CopyOnWriteArrayList<String> allowedDomain = new CopyOnWriteArrayList<>();
 	private @Getter CopyOnWriteArrayList<String> forbiddenDomain = new CopyOnWriteArrayList<>();
-
-	public boolean check(String url) throws URISyntaxException {
-
-		if (!allowByDomain(url)) {
-			return false;
-		}
-
-		return true;
-	}
 
 	private boolean allowByDomain(String url) throws URISyntaxException {
 		String domain = getDomainByURI(url);
@@ -39,8 +31,12 @@ public class FilterEngine {
 		return true;
 	}
 
-	private String getDomainByURI(String url) throws URISyntaxException {
-		return new URI(url).getHost();
+	public boolean check(String url) throws URISyntaxException {
+		return allowByDomain(url);
+	}
+
+	private String getDomainByURI(String url) throws NullPointerException, IllegalArgumentException {
+		return UrlUtils.getDomainFromUrl(url);
 	}
 
 }
